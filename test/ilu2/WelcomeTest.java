@@ -44,4 +44,9 @@ class WelcomeTest {
 	void testAndEntreLesDerniersNoms() {
 		assertEquals(Welcome.welcome("bob, AMY, jerry, JACK"), "Hello, Bob and Jerry. AND HELLO, AMY AND JACK !");
 	}
+	
+	@Test
+	void testSupprimerEspaceInutile() {
+		assertEquals(Welcome.welcome("bob    , amy   "), "Hello, Bob and Amy");
+	}
 }
