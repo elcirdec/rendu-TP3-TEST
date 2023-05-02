@@ -34,4 +34,9 @@ class WelcomeTest {
 	void testInputMoreThan2Names() {
 		assertEquals(Welcome.welcome("Amy, bob, jerry"), "Hello, Amy, Bob, Jerry");
 	}
+	
+	@Test
+	void testCrisAvecPlusieursNom() {
+		assertEquals(Welcome.welcome("Amy, BOB, Jerry"), "Hello, Amy, Jerry. AND HELLO, BOB !");
+	}
 }
