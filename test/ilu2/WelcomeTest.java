@@ -30,4 +30,8 @@ class WelcomeTest {
 		assertEquals(Welcome.welcome("amy,bob"), "Hello, Amy, Bob");
 	}
 
+	@Test
+	void testInputMoreThan2Names() {
+		assertEquals(Welcome.welcome("Amy, bob, jerry"), "Hello, Amy, Bob, Jerry");
+	}
 }
