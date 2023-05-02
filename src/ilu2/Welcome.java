@@ -1,52 +1,61 @@
 package ilu2;
 
 public class Welcome {
-	
-	public static StringBuilder plusDeDeuxNomInput(String[] names,StringBuilder resultat) {
-		for (int i=0;i<names.length-1;i++) {
-			resultat.append(", ");
-			resultat.append(names[i].substring(0, 1).toUpperCase() + names[i].substring(1));
+
+	public static StringBuilder plusDeDeuxNomInput(String[] names,StringBuilder resultat, int[] nbOccMots) {
+		int nbMotEnMin=0;
+		for (String i : names) {				
+			if(!i.equals(i.toUpperCase())) {
+				nbMotEnMin++;
+			}
 		}
-		resultat.append(" and ");
-		resultat.append(names[names.length-1].substring(0, 1).toUpperCase() + names[names.length-1].substring(1));
+		resultat=motsMinuscule(names, resultat, nbMotEnMin, nbOccMots);
+		System.out.println(resultat.toString());
 		return resultat;
 	}
 
-	public static StringBuilder motsMinuscule(String[] names,StringBuilder resultat,int nbMotsMinuscule) {
+	public static StringBuilder motsMinuscule(String[] names,StringBuilder resultat,int nbMotsMinuscule,int[] nbOccMots) {
 		int occMin=0;
-		for (String name : names) {
-			if(!name.equals(name.toUpperCase())) {
+		for (int i=0;i<names.length;i++) {
+			if(!names[i].equals(names[i].toUpperCase())) {
 				if(occMin==nbMotsMinuscule-1 && occMin!=0) {
 					resultat.append(" and ");
 				}else {
 					resultat.append(", ");
 				}						
 				occMin++;
-				resultat.append(name.substring(0, 1).toUpperCase() + name.substring(1));
+				if(nbOccMots[i]==1) {
+					resultat.append(names[i].substring(0, 1).toUpperCase() + names[i].substring(1));
+				}else {
+					resultat.append(names[i].substring(0, 1).toUpperCase() + names[i].substring(1) + " (x"+nbOccMots[i]+")");
+				}
 			}
 		}
 		return resultat;
 	}
-	public static StringBuilder motsMajuscule(String[] names,StringBuilder resultat, int nbMotsMajuscule) {
+	public static StringBuilder motsMajuscule(String[] names,StringBuilder resultat, int nbMotsMajuscule, int[] nbOccMots) {
 		int occMaj=0;
-		System.out.println(nbMotsMajuscule);
 		resultat.append(". AND HELLO");
-		for (String name : names) {
-			if(name.equals(name.toUpperCase())) {
+		for (int i=0;i<names.length;i++) {
+			if(names[i].equals(names[i].toUpperCase())) {
 				if(occMaj==nbMotsMajuscule-1 && occMaj!=0) {
 					resultat.append(" AND ");
 				}else {
 					resultat.append(", ");
 				}		
 				occMaj++;
-				resultat.append(name.substring(0, 1).toUpperCase() + name.substring(1));
+				if(nbOccMots[i]==1) {
+					resultat.append(names[i].substring(0, 1).toUpperCase() + names[i].substring(1));
+				}else {
+					resultat.append(names[i].substring(0, 1).toUpperCase() + names[i].substring(1) + " (x"+nbOccMots[i]+")");
+				}
 			}
 		}
 		resultat.append(" !");
 		return resultat;
 	}
-	
-	public static StringBuilder crisAvecPlusieursNoms(String[] names,StringBuilder resultat) {
+
+	public static StringBuilder crisAvecPlusieursNoms(String[] names,StringBuilder resultat, int[] nbOccMots) {
 		int nbMotEnMin=0;
 		int nbMotEnMaj=0;
 		for (String i : names) {				
@@ -56,12 +65,52 @@ public class Welcome {
 				nbMotEnMin++;
 			}
 		}
-		resultat=motsMinuscule(names, resultat,nbMotEnMin);
-		resultat=motsMajuscule(names, resultat,nbMotEnMaj);		
-		System.out.println(resultat.toString());
+		resultat=motsMinuscule(names, resultat,nbMotEnMin,nbOccMots);
+		resultat=motsMajuscule(names, resultat,nbMotEnMaj,nbOccMots);		
+
 		return resultat;
 	}
 
+
+	public static int[] nbOccMots(String[] names) {
+		boolean visited[] = new boolean[names.length];
+		int[] nbOccMots = new int[names.length];
+		for (int i = 0; i < names.length; i++) {	 
+			int occ = 1;
+			if(visited[i]==false) {
+				for (int j = i + 1; j < names.length; j++) {
+					if (names[i].equals(names[j])) {	                
+						occ++;
+						visited[j]=true;
+					}
+				}
+				nbOccMots[i]=occ;
+			}
+		}
+		return nbOccMots;
+	}
+
+	public static String[] namesDistinct(String[] names) {
+		int nbValeurDistinct=0;
+		boolean visited[] = new boolean[names.length];
+		for (int i = 0; i < names.length; i++) {	 
+			if(visited[i]==false) {
+				for (int j = i + 1; j < names.length; j++) {
+					if (names[i].equals(names[j])) {	                
+						visited[j]=true;
+					}
+				}
+				nbValeurDistinct++;
+			}
+		}
+		String[] namesDistinct= new String[nbValeurDistinct];
+		for (int i = 0; i < names.length; i++) {	 
+			if(visited[i]==false) {
+				namesDistinct[i]=names[i];
+			}
+		}
+		return namesDistinct;
+	}
 	public static StringBuilder plusieursNomInput(String[] names,StringBuilder resultat) {
 		resultat.append("Hello");
 		boolean isNameMaj=false;
@@ -70,16 +119,18 @@ public class Welcome {
 				isNameMaj=true;
 			}
 		}
+		int[] nbOccMots = nbOccMots(names);
+		String[] namesDistinct=namesDistinct(names);
 		if(names.length>=2 && isNameMaj) {
-			resultat=crisAvecPlusieursNoms(names, resultat);
+			resultat=crisAvecPlusieursNoms(namesDistinct, resultat, nbOccMots);
 		}else if(names.length==2) {
 			resultat.append(", "+names[0].substring(0, 1).toUpperCase() + names[0].substring(1)+" and "+names[1].substring(0, 1).toUpperCase() + names[1].substring(1));
 		}else if(names.length>2) {
-			resultat=plusDeDeuxNomInput(names,resultat);
+			resultat=plusDeDeuxNomInput(namesDistinct,resultat,nbOccMots);
 		}
 		return resultat;
 	}
-	
+
 	public static String welcome(String input) {
 		StringBuilder resultat = new StringBuilder();
 		if(input== null || input.isEmpty() || input.isBlank()) {

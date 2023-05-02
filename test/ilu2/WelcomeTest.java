@@ -49,4 +49,10 @@ class WelcomeTest {
 	void testSupprimerEspaceInutile() {
 		assertEquals(Welcome.welcome("bob    , amy   "), "Hello, Bob and Amy");
 	}
+	
+	@Test
+	void testNbOccNoms() {
+		assertEquals(Welcome.welcome("bob, JERRY, amy, bob, JERRY, bob"), "Hello, Bob (x3) and Amy. AND HELLO, JERRY (x2) !");
+		assertEquals(Welcome.welcome("bob, amy, bob, bob"), "Hello, Bob (x3) and Amy");
+	}
 }
