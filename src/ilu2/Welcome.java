@@ -67,7 +67,7 @@ public class Welcome {
 		}
 		resultat=motsMinuscule(names, resultat,nbMotEnMin,nbOccMots);
 		resultat=motsMajuscule(names, resultat,nbMotEnMaj,nbOccMots);		
-
+		System.out.println(resultat.toString());
 		return resultat;
 	}
 
@@ -142,7 +142,6 @@ public class Welcome {
 		}else {
 			input=input.replaceAll(" ","");
 			String[] names=input.split(",");
-
 			resultat=plusieursNomInput(names, resultat);
 		}
 		return resultat.toString();
